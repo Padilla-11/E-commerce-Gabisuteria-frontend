@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <!--<meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Dashboard - Panel Administrador</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/styles.css">
+    <!-- <link rel="stylesheet" href="../css/tabla-admin-responsive.css">
+    rel="stylesheet" href="menu-mobile.css"> -->
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark admin-header">
+        <div class="container-fluid px-4">
+            <!-- Botón hamburguesa (solo móvil) -->
+            <button class="admin-hamburger" id="admin-hamburger-btn" type="button">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <a class="navbar-brand" href="dashboard.html">
+                <i class="fas fa-user-shield"></i> Panel Admin
+            </a>
+            <div class="d-flex align-items-center gap-3">
+                <span class="text-white d-none d-md-inline" id="admin-name"></span>
+                <button class="btn btn-outline-light btn-sm" onclick="cerrarSesion()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span class="d-none d-md-inline">Salir</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Overlay para cerrar sidebar -->
+            <div class="admin-sidebar-overlay" id="admin-sidebar-overlay"></div>
+
+            <!-- Sidebar - UNA SOLA VEZ -->
+            <nav class="col-md-3 col-lg-2 d-md-block admin-sidebar p-3" id="admin-sidebar">
+                <!-- Botón cerrar (solo móvil) -->
+                <button class="admin-sidebar-close" id="admin-sidebar-close" type="button">
+                    <i class="fas fa-times"></i>
+                </button>
+
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="dashboard.html">
+                            <i class="fas fa-home"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="productos.html">
+                            <i class="fas fa-box"></i> Productos
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="categorias.html">
+                            <i class="fas fa-tags"></i> Categorías
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="colores.html">
+                            <i class="fas fa-palette"></i> Colores
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="administradores.html">
+                            <i class="fas fa-users-cog"></i> Administradores
+                        </a>
+                    </li>
+                    
+                    <li class="nav-item mt-3">
+                        <a class="nav-link" href="../index.html" target="_blank">
+                            <i class="fas fa-store"></i> Ver Tienda
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- Contenido Principal -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2><i class="fas fa-chart-line"></i> Dashboard</h2>
+                </div>
+
+                <!-- Tarjetas de Estadísticas -->
+                <div class="row g-4 mb-4">
+                    <div class="col-md-6 col-lg-3">
+                        <div class="card stats-card shadow-sm">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <p class="text-muted mb-1">Total Productos</p>
+                                        <h3 class="mb-0" id="total-productos">0</h3>
+                                    </div>
+                                    <div class="fs-1 text-primary">
+                                        <i class="fas fa-box"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 col-lg-3">
+                        <div class="card stats-card shadow-sm">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <p class="text-muted mb-1">Categorías</p>
+                                        <h3 class="mb-0" id="total-categorias">0</h3>
+                                    </div>
+                                    <div class="fs-1 text-success">
+                                        <i class="fas fa-tags"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 col-lg-3">
+                        <div class="card stats-card shadow-sm">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <p class="text-muted mb-1">Colores</p>
+                                        <h3 class="mb-0" id="total-colores">0</h3>
+                                    </div>
+                                    <div class="fs-1 text-warning">
+                                        <i class="fas fa-palette"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 col-lg-3">
+                        <div class="card stats-card shadow-sm">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <p class="text-muted mb-1">Administradores</p>
+                                        <h3 class="mb-0" id="total-admins">0</h3>
+                                    </div>
+                                    <div class="fs-1 text-info">
+                                        <i class="fas fa-users-cog"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Accesos Rápidos -->
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <div class="card shadow-sm">
+                            <div class="card-body">
+                                <h5 class="card-title mb-4">
+                                    <i class="fas fa-rocket"></i> Accesos Rápidos
+                                </h5>
+                                <div class="d-grid gap-2">
+                                    <a href="productos.html" class="btn btn-outline-primary btn-lg">
+                                        <i class="fas fa-plus-circle"></i> Agregar Nuevo Producto
+                                    </a>
+                                    <a href="categorias.html" class="btn btn-outline-success btn-lg">
+                                        <i class="fas fa-folder-plus"></i> Agregar Nueva Categoría
+                                    </a>
+                                    <a href="administradores.html" class="btn btn-outline-info btn-lg">
+                                        <i class="fas fa-user-plus"></i> Gestionar Administradores
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="card shadow-sm">
+                            <div class="card-body">
+                                <h5 class="card-title mb-4">
+                                    <i class="fas fa-info-circle"></i> Información del Sistema
+                                </h5>
+                                <ul class="list-unstyled">
+                                    <li class="mb-3">
+                                        <i class="fas fa-check-circle text-success"></i>
+                                        <strong>Estado del Backend:</strong>
+                                        <span id="backend-status" class="badge bg-success ms-2">Conectado</span>
+                                    </li>
+                                    <li class="mb-3">
+                                        <i class="fas fa-user text-primary"></i>
+                                        <strong>Usuario:</strong>
+                                        <span id="user-email" class="ms-2">-</span>
+                                    </li>
+                                    <li class="mb-3">
+                                        <i class="fas fa-clock text-info"></i>
+                                        <strong>Última actualización:</strong>
+                                        <span id="last-update" class="ms-2">Ahora</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/admin/admin-mobile.js"></script>
+    <script>
+        /* =======================
+        VERIFICAR AUTENTICACIÓN
+        ======================= */
+        async function verificarAuth() {
+            const token = localStorage.getItem('authToken');
+
+            if (!token) {
+                console.warn('❌ No hay token, redirigiendo al login');
+                window.location.href = 'login.html';
+                return false;
+            }
+
+            try {
+                console.log('🔍 Verificando token JWT...');
+
+                const response = await fetch(`${API_URL}/auth/check`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Token inválido (${response.status})`);
+                }
+
+                const data = await response.json();
+                console.log('✅ Token válido:', data.user);
+
+                // Mostrar info del admin
+                document.getElementById('admin-name').innerHTML =
+                    `<i class="fas fa-user-circle"></i> ${data.user.nombre}`;
+
+                document.getElementById('user-email').textContent =
+                    data.user.email;
+
+                return true;
+
+            } catch (error) {
+                console.error('❌ Error de autenticación:', error);
+                localStorage.removeItem('authToken');
+                window.location.href = 'login.html';
+                return false;
+            }
+        }
+
+        /* =======================
+        CARGAR ESTADÍSTICAS
+        ======================= */
+        async function cargarEstadisticas() {
+            try {
+                const [productos, categorias, colores, admins] = await Promise.all([
+                    productosAPI.getAll(),
+                    categoriasAPI.getAll(),
+                    coloresAPI.getAll(),
+                    administradoresAPI.getAll()
+                ]);
+
+                document.getElementById('total-productos').textContent = productos.length;
+                document.getElementById('total-categorias').textContent = categorias.length;
+                document.getElementById('total-colores').textContent = colores.length;
+                document.getElementById('total-admins').textContent = admins.length;
+
+                document.getElementById('last-update').textContent =
+                    new Date().toLocaleTimeString('es-CO');
+
+                document.getElementById('backend-status').textContent = 'Conectado';
+                document.getElementById('backend-status').className =
+                    'badge bg-success ms-2';
+
+            } catch (error) {
+                console.error('⚠️ Error cargando estadísticas:', error);
+
+                document.getElementById('backend-status').textContent = 'Error';
+                document.getElementById('backend-status').className =
+                    'badge bg-danger ms-2';
+            }
+        }
+
+        /* =======================
+        CERRAR SESIÓN
+        ======================= */
+        function cerrarSesion() {
+            if (confirm('¿Estás seguro de cerrar sesión?')) {
+                localStorage.removeItem('authToken');
+                window.location.href = 'login.html';
+            }
+        }
+
+        /* =======================
+        ⚠️ ELIMINADA LA FUNCIÓN toggleAdminSidebar()
+        Ya está definida en admin-mobile.js
+        ======================= */
+
+        /* =======================
+        INICIALIZACIÓN
+        ======================= */
+        document.addEventListener('DOMContentLoaded', async () => {
+            console.log('🚀 Iniciando dashboard (JWT)');
+
+            const autenticado = await verificarAuth();
+            if (!autenticado) return;
+
+            console.log('📊 Cargando estadísticas...');
+            await cargarEstadisticas();
+
+            // ⬇️ Event listeners menú móvil
+            // Ya están manejados por admin-mobile.js
+            // Solo verificamos que existan los elementos
+            const hamburger = document.getElementById('admin-hamburger-btn');
+            const closeBtn = document.getElementById('admin-sidebar-close');
+            const overlay = document.getElementById('admin-sidebar-overlay');
+            
+            if (hamburger) {
+                console.log('✅ Botón hamburguesa encontrado');
+            } else {
+                console.warn('⚠️ No se encontró botón hamburguesa');
+            }
+            
+            if (closeBtn) {
+                console.log('✅ Botón cerrar encontrado');
+            } else {
+                console.warn('⚠️ No se encontró botón cerrar');
+            }
+            
+            if (overlay) {
+                console.log('✅ Overlay encontrado');
+            } else {
+                console.warn('⚠️ No se encontró overlay');
+            }
+            
+            console.log('✅ Dashboard inicializado correctamente');
+        });
+    </script>
+
+</body>
+</html>

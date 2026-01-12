@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Gestión de Productos - Panel Admin</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/loading-animations.css">
+    
+    <style>
+        /* Estilos adicionales para filtros */
+        .filters-bar {
+            background: #F9FAFB;
+            padding: 1.25rem;
+            border-radius: 12px;
+            border: 1px solid #E5E7EB;
+            margin-bottom: 1.5rem;
+        }
+        
+        .filter-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+        
+        .filter-control {
+            width: 100%;
+        }
+        
+        .quick-filters {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-top: 0.75rem;
+        }
+        
+        .quick-filter-btn {
+            padding: 0.4rem 0.875rem;
+            border: 1px solid #E5E7EB;
+            background: white;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: #6B7280;
+        }
+        
+        .quick-filter-btn:hover {
+            border-color: #8B5CF6;
+            color: #8B5CF6;
+            background: #FAF5FF;
+        }
+        
+        .quick-filter-btn.active {
+            background: #8B5CF6;
+            border-color: #8B5CF6;
+            color: white;
+        }
+        
+        @media (max-width: 767px) {
+            .filters-bar {
+                padding: 1rem;
+            }
+            
+            .filter-control {
+                font-size: 0.9rem;
+            }
+            
+            .quick-filter-btn {
+                font-size: 0.8rem;
+                padding: 0.35rem 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark admin-header">
+        <div class="container-fluid px-4">
+            <button class="admin-hamburger" id="admin-hamburger-btn" type="button">
+                <i class="fas fa-bars"></i>
+            </button>
+            <a class="navbar-brand" href="dashboard.html">
+                <i class="fas fa-user-shield"></i> Panel Admin
+            </a>
+            <div class="d-flex align-items-center gap-3">
+                <span class="text-white d-none d-md-inline" id="admin-name"></span>
+                <button class="btn btn-outline-light btn-sm" onclick="cerrarSesion()">
+                    <i class="fas fa-sign-out-alt"></i> 
+                    <span class="d-none d-md-inline">Salir</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Overlay -->
+            <div class="admin-sidebar-overlay" id="admin-sidebar-overlay"></div>
+
+            <!-- Sidebar -->
+            <nav class="col-md-3 col-lg-2 d-md-block admin-sidebar p-3" id="admin-sidebar">
+                <button class="admin-sidebar-close" id="admin-sidebar-close" type="button">
+                    <i class="fas fa-times"></i>
+                </button>
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link" href="dashboard.html">
+                            <i class="fas fa-home"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="productos.html">
+                            <i class="fas fa-box"></i> Productos
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="categorias.html">
+                            <i class="fas fa-tags"></i> Categorías
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="colores.html">
+                            <i class="fas fa-palette"></i> Colores
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="administradores.html">
+                            <i class="fas fa-users-cog"></i> Administradores
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- Contenido Principal -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2><i class="fas fa-box"></i> Gestión de Productos</h2>
+                    <button class="btn btn-primary" onclick="mostrarModalProducto()">
+                        <i class="fas fa-plus"></i> Nuevo Producto
+                    </button>
+                </div>
+
+                <!-- Barra de Filtros Avanzados -->
+                <div class="filters-bar">
+                    <div class="row g-3">
+                        <!-- Búsqueda -->
+                        <div class="col-md-4 col-lg-3">
+                            <label class="filter-label">
+                                <i class="fas fa-search"></i> Buscar
+                            </label>
+                            <input type="text" class="form-control filter-control" id="search-admin" 
+                                   placeholder="Nombre, marca, categoría...">
+                        </div>
+
+                        <!-- Ordenar por -->
+                        <div class="col-md-4 col-lg-3">
+                            <label class="filter-label">
+                                <i class="fas fa-sort"></i> Ordenar por
+                            </label>
+                            <select class="form-select filter-control" id="sort-select">
+                                <option value="newest">Más recientes</option>
+                                <option value="oldest">Más antiguos</option>
+                                <option value="name-asc">Nombre (A-Z)</option>
+                                <option value="name-desc">Nombre (Z-A)</option>
+                                <option value="price-asc">Precio (Menor-Mayor)</option>
+                                <option value="price-desc">Precio (Mayor-Menor)</option>
+                            </select>
+                        </div>
+
+                        <!-- Categoría -->
+                        <div class="col-md-4 col-lg-2">
+                            <label class="filter-label">
+                                <i class="fas fa-tag"></i> Categoría
+                            </label>
+                            <select class="form-select filter-control" id="category-filter">
+                                <option value="all">Todas</option>
+                            </select>
+                        </div>
+
+                        <!-- Estado -->
+                        <div class="col-md-4 col-lg-2">
+                            <label class="filter-label">
+                                <i class="fas fa-toggle-on"></i> Estado
+                            </label>
+                            <select class="form-select filter-control" id="status-filter">
+                                <option value="all">Todos</option>
+                                <option value="active">Activos</option>
+                                <option value="inactive">Inactivos</option>
+                            </select>
+                        </div>
+
+                        <!-- Botón Resetear -->
+                        <div class="col-md-4 col-lg-2 d-flex align-items-end">
+                            <button class="btn btn-outline-secondary w-100" id="reset-filters-btn">
+                                <i class="fas fa-redo"></i> Resetear
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Filtros Rápidos de Precio (Opcional) -->
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <label class="filter-label">
+                                <i class="fas fa-dollar-sign"></i> Rango de precio (opcional)
+                            </label>
+                            <div class="row g-2">
+                                <div class="col-6 col-md-3 col-lg-2">
+                                    <input type="number" class="form-control form-control-sm" 
+                                           id="price-min" placeholder="Mínimo" min="0" step="1000">
+                                </div>
+                                <div class="col-6 col-md-3 col-lg-2">
+                                    <input type="number" class="form-control form-control-sm" 
+                                           id="price-max" placeholder="Máximo" min="0" step="1000">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Filtros Rápidos -->
+                    <div class="quick-filters">
+                        <button class="quick-filter-btn" data-sort="price-asc">
+                            <i class="fas fa-arrow-down"></i> Más baratos
+                        </button>
+                        <button class="quick-filter-btn" data-sort="price-desc">
+                            <i class="fas fa-arrow-up"></i> Más caros
+                        </button>
+                        <button class="quick-filter-btn" data-sort="name-asc">
+                            <i class="fas fa-sort-alpha-down"></i> A-Z
+                        </button>
+                        <button class="quick-filter-btn" data-sort="newest">
+                            <i class="fas fa-clock"></i> Recientes
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Estadísticas de filtrado -->
+                <div id="filter-stats"></div>
+
+                <!-- Tabla de Productos -->
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Imagen</th>
+                                        <th>Nombre</th>
+                                        <th>Marca</th>
+                                        <th>Categorías</th>
+                                        <th>Precio</th>
+                                        <th>Colores</th>
+                                        <th>Estado</th>
+                                        <th class="acciones-col">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tabla-productos">
+                                    <tr>
+                                        <td colspan="8" class="text-center">
+                                            <div class="spinner-border text-primary" role="status"></div>
+                                            <p class="mt-2">Cargando productos...</p>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Modal Producto (sin cambios) -->
+    <div class="modal fade" id="productoModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTitle">Nuevo Producto</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="form-producto">
+                        <input type="hidden" id="producto-id">
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Nombre *</label>
+                                <input type="text" class="form-control" id="nombre" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Marca</label>
+                                <input type="text" class="form-control" id="marca">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Tamaño</label>
+                                <input type="text" class="form-control" id="tamano" 
+                                       placeholder="Ej: Carta, Grande, 100 hojas">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Precio *</label>
+                                <input type="number" class="form-control" id="precio" 
+                                       min="0" step="100" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Categorías *</label>
+                                <div id="categorias-list" class="border rounded p-2" style="max-height: 150px; overflow-y: auto;"></div>
+                                <small class="text-muted">Selecciona una o más categorías</small>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Imagen del Producto</label>
+                                <ul class="nav nav-pills mb-3" id="image-tabs" role="tablist">
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link active" id="tab-archivo" data-bs-toggle="pill" 
+                                                data-bs-target="#panel-archivo" type="button" role="tab">
+                                            <i class="fas fa-upload"></i> Subir
+                                        </button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="tab-url" data-bs-toggle="pill" 
+                                                data-bs-target="#panel-url" type="button" role="tab">
+                                            <i class="fas fa-link"></i> URL
+                                        </button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="tab-buscar" data-bs-toggle="pill" 
+                                                data-bs-target="#panel-buscar" type="button" role="tab">
+                                            <i class="fas fa-search"></i> Buscar
+                                        </button>
+                                    </li>
+                                </ul>
+                                <div class="tab-content" id="image-tab-content">
+                                    <div class="tab-pane fade show active" id="panel-archivo" role="tabpanel">
+                                        <input type="file" class="form-control" id="imagen" accept="image/*">
+                                        <small class="text-muted">Máx. 5MB - JPG, PNG, WebP</small>
+                                    </div>
+                                    <div class="tab-pane fade" id="panel-url" role="tabpanel">
+                                        <div class="input-group">
+                                            <input type="url" class="form-control" id="imagen-url" 
+                                                   placeholder="https://ejemplo.com/imagen.jpg">
+                                            <button class="btn btn-primary" type="button" id="btn-cargar-url">
+                                                <i class="fas fa-download"></i> Cargar
+                                            </button>
+                                        </div>
+                                        <small class="text-muted d-block mt-1">Pega la URL de la imagen</small>
+                                        <div id="url-validation" class="mt-2"></div>
+                                    </div>
+                                    <div class="tab-pane fade" id="panel-buscar" role="tabpanel">
+                                        <button class="btn btn-info w-100" type="button" id="btn-buscar-google">
+                                            <i class="fab fa-google"></i> Buscar en Google Images
+                                        </button>
+                                        <small class="text-muted d-block mt-2">
+                                            Se abrirá Google Images con la búsqueda del producto.
+                                            Luego copia la URL de la imagen y pégala en la pestaña "URL".
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="maneja-colores">
+                                    <label class="form-check-label" for="maneja-colores">
+                                        Este producto maneja variantes de color
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-12 mb-3" id="colores-section" style="display: none;">
+                                <label class="form-label">Colores Disponibles</label>
+                                <div id="colores-list" class="d-flex flex-wrap gap-2"></div>
+                            </div>
+                            <div class="col-12" id="preview-imagen"></div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" onclick="guardarProducto()">
+                        <i class="fas fa-save"></i> Guardar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/admin/loading-utils.js"></script>
+    <script src="../js/admin/admin-filters.js"></script>
+    <script src="../js/admin/productos.js"></script>
+    <script src="../js/admin/admin-mobile.js"></script>
+
+</body>
+</html>

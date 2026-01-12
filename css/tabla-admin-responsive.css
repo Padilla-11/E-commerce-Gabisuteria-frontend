@@ -1,0 +1,265 @@
+/* ==================== TABLA ADMIN RESPONSIVE ==================== */
+
+/* ============================================
+   ESTILOS GENERALES DE TABLA
+   ============================================ */
+.table {
+  margin-bottom: 0;
+  background: white;
+}
+
+.table thead th {
+  background: #f8f9fa;
+  color: #374151;
+  font-weight: 600;
+  border-bottom: 2px solid #e5e7eb;
+  padding: 1rem 0.75rem;
+  white-space: nowrap;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.table tbody td {
+  padding: 0.875rem 0.75rem;
+  vertical-align: middle;
+  color: #1f2937;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.table tbody tr:hover {
+  background-color: #f9fafb;
+}
+
+.table-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: nowrap;
+}
+
+.table-actions .btn {
+  transition: all 0.2s ease;
+}
+
+.table-actions .btn:hover {
+  transform: translateY(-2px);
+}
+
+/* ============================================
+   RESPONSIVE - TABLET (768px - 991px)
+   ============================================ */
+@media (min-width: 768px) and (max-width: 991px) {
+  .table {
+    font-size: 0.875rem;
+  }
+
+  .table thead th,
+  .table tbody td {
+    padding: 0.75rem 0.5rem;
+  }
+
+  .table td img {
+    width: 50px !important;
+    height: 50px !important;
+  }
+
+  .table-actions .btn {
+    padding: 0.4rem 0.65rem;
+    font-size: 0.875rem;
+  }
+}
+
+/* ============================================
+   RESPONSIVE - MÓVIL (< 768px)
+   COLUMNA DE ACCIONES FIJA - SOLUCIÓN COMPLETA
+   ============================================ */
+@media (max-width: 767px) {
+  /* Contenedor de tabla con scroll horizontal */
+  .table-responsive {
+    position: relative;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+  }
+
+  /* Tabla con scroll - ancho mínimo para activar scroll horizontal */
+  .table {
+    min-width: 800px;
+    font-size: 0.8rem;
+    /* CRÍTICO: position relative para que sticky funcione */
+    position: relative;
+  }
+
+  /* ============================================
+     COLUMNA DE ACCIONES FIJA A LA DERECHA
+     ============================================ */
+  
+  /* HEADER de la última columna (Acciones) */
+  .table thead th:last-child,
+  .table thead th.acciones-col {
+    position: sticky;
+    right: 0;
+    z-index: 20; /* Mayor z-index para estar por encima */
+    background: #f8f9fa !important;
+    font-weight: 600;
+    box-shadow: -3px 0 8px rgba(0, 0, 0, 0.1);
+    min-width: 110px;
+    padding: 0.75rem 0.5rem;
+  }
+
+  /* CELDAS del tbody - última columna (Acciones) */
+  .table tbody td:last-child,
+  .table tbody td.acciones-col {
+    position: sticky;
+    right: 0;
+    z-index: 10;
+    background: white !important;
+    box-shadow: -3px 0 8px rgba(0, 0, 0, 0.1);
+    min-width: 110px;
+    padding: 0.75rem 0.5rem;
+  }
+
+  /* IMPORTANTE: Mantener el fondo blanco en hover */
+  .table tbody tr:hover td:last-child,
+  .table tbody tr:hover td.acciones-col {
+    background: white !important;
+  }
+
+  /* ============================================
+     INDICADOR VISUAL DE SCROLL (FLECHA →)
+     ============================================ */
+  .table-responsive::after {
+    content: '→';
+    position: absolute;
+    right: 120px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.75rem;
+    color: rgba(139, 92, 246, 0.4);
+    font-weight: bold;
+    pointer-events: none;
+    animation: slideHint 2s infinite;
+    z-index: 5;
+  }
+
+  @keyframes slideHint {
+    0%, 100% { 
+      opacity: 0.3; 
+      transform: translateY(-50%) translateX(0); 
+    }
+    50% { 
+      opacity: 0.7; 
+      transform: translateY(-50%) translateX(8px); 
+    }
+  }
+
+  /* Ocultar el indicador después del primer scroll */
+  .table-responsive.scrolled::after {
+    display: none;
+  }
+
+  /* ============================================
+     OPTIMIZACIONES PARA MÓVIL
+     ============================================ */
+  
+  /* Botones de acción más compactos */
+  .table-actions {
+    gap: 0.375rem;
+    justify-content: center;
+    white-space: nowrap;
+  }
+
+  .table-actions .btn {
+    padding: 0.375rem 0.5rem;
+    font-size: 0.8rem;
+    min-width: auto;
+  }
+
+  .table-actions .btn i {
+    font-size: 0.85rem;
+  }
+
+  /* Reducir tamaño de imágenes */
+  .table td img {
+    width: 45px !important;
+    height: 45px !important;
+    border-radius: 6px;
+  }
+
+  /* Badges más pequeños */
+  .table .badge {
+    font-size: 0.65rem;
+    padding: 0.25rem 0.4rem;
+    white-space: nowrap;
+  }
+
+  .table .badge + .badge {
+    margin-left: 0.25rem;
+    margin-top: 0.25rem;
+  }
+
+  /* Reducir padding general de celdas */
+  .table thead th,
+  .table tbody td {
+    padding: 0.75rem 0.5rem;
+    font-size: 0.8rem;
+  }
+
+  /* Primera columna (imagen) más compacta */
+  .table thead th:first-child,
+  .table tbody td:first-child {
+    padding-left: 0.75rem;
+    padding-right: 0.5rem;
+    min-width: 60px;
+  }
+
+  /* Ajustar nombres de productos - máximo 2 líneas */
+  .table tbody td:nth-child(2) {
+    max-width: 150px;
+    font-size: 0.8rem;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* Columnas de marca y categorías más compactas */
+  .table tbody td:nth-child(3),
+  .table tbody td:nth-child(4) {
+    font-size: 0.75rem;
+  }
+
+  /* Columna de precio */
+  .table tbody td:nth-child(5) {
+    font-weight: 600;
+    color: #8B5CF6;
+    white-space: nowrap;
+  }
+}
+
+/* ============================================
+   DESKTOP - RESTABLECER ESTILOS NORMALES
+   ============================================ */
+@media (min-width: 992px) {
+  .table-responsive {
+    overflow-x: visible;
+  }
+  
+  /* Quitar sticky en desktop */
+  .table thead th:last-child,
+  .table tbody td:last-child,
+  .table thead th.acciones-col,
+  .table tbody td.acciones-col {
+    position: static;
+    box-shadow: none;
+  }
+
+  /* Quitar indicador de scroll */
+  .table-responsive::after {
+    display: none;
+  }
+}
