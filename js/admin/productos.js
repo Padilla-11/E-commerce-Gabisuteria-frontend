@@ -170,7 +170,7 @@ function renderizarProductos(productosAMostrar) {
         const imagenUrl = p.imagen_url
             ? (p.imagen_url.startsWith('http')
                 ? p.imagen_url
-                : `https://tali-s-ecommerce-backend-production.up.railway.app${p.imagen_url}`)
+                : `https://e-commerce-gabisuteria-backend.onrender.com${p.imagen_url}`)
             : 'https://via.placeholder.com/50x50?text=Sin+Imagen';
 
         const categoriasTexto = p.categorias?.length

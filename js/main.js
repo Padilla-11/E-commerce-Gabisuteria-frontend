@@ -162,7 +162,7 @@ function configurarLupa(imagenUrl) {
 
 async function cargarTodosLosProductos() {
   try {
-    const API_URL = window.location.hostname === 'localhost' ? 'http://localhost:3000' : 'https://tali-s-ecommerce-backend-production.up.railway.app';
+    const API_URL = window.location.hostname === 'localhost' ? 'http://localhost:3000' : 'https://e-commerce-gabisuteria-backend.onrender.com';
     const response = await fetch(`${API_URL}/api/productos?limit=1000`, {
       credentials: 'include'
     });
